@@ -2,3 +2,7 @@
 	path = extra-addons/enterprise
 	url = git@git.indboo.com:Indboo-dev/enterprise.git
 	branch = 14.0
+[submodule "vendor-bills"]
+	path = vendor-bills
+	url = git@git.indboo.com:Indboo-dev/vendor-bills.git
+	branch = 13.0
