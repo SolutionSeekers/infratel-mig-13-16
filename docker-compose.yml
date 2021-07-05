@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   odoo:
-    image: llacox/odoo:barrigas-14.0-ee
+    image: llacox/odoo:13.0
     volumes:
       - data:/var/lib/odoo
     command: --workers 3 --limit-time-cpu 1800 --limit-time-real 1800
