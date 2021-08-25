@@ -22,6 +22,7 @@
                         <th t-attf-style="{{th_style}}"><i class="fa fa-list-ol"/> Item</th>
                         <th t-if="style.show_img" t-attf-style="{{th_style}}"><i class="fa fa-camera"/> Imagen</th>
                         <th t-attf-style="{{th_style}}"><i class="fa fa-th-large"/> Descripción</th>
+                        <th t-attf-style="{{th_style}}"><i class="fa fa-hashtag"/> Código SAT</th>
                         <th t-attf-style="{{th_style}}" class="d-none text-left"><i class="fa fa-th-large"/> Documento Origen</th>
                         <th class="text-right" t-attf-style="{{th_style}}"><i class="fa fa-sort-amount-asc"/> Cantidad</th>
                         <th class="text-right" t-attf-style="{{th_style}}"><i class="fa fa-tags"/> Precio Unitario</th>
@@ -45,6 +46,7 @@
                                 <td><span t-esc="item_count"/></td>
                                 <td t-if="style.show_img"><span t-if="l.sudo().product_id.image_128" itemprop="image" t-field="l.sudo().product_id.image_128" t-options='{"widget": "image"}'/></td>
                                 <td><span t-field="l.name"/></td>
+                                <td><span t-field="l.sudo().product_id.l10n_mx_edi_code_sat_id"/></td>
                                 <td class="text-right">
                                     <span t-field="l.quantity"/>
                                     <span t-field="l.product_uom_id"  groups="uom.group_uom"/>

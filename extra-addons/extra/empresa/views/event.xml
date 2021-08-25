@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="coparmex_event_registration_form" model="ir.ui.view">
+        <field name="name">event.registration.inherit.form</field>
+        <field name="model">event.registration</field>
+        <field name="priority">37</field>
+        <field name="inherit_id" ref="event.view_event_registration_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_closed']" position="after">
+                <field name="num_boleto"/>
+            </xpath>
+            <xpath expr="//field[@name='sale_order_id']" position="before">
+                <field name="payment_method"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="coparmex_event_registration_kanban" model="ir.ui.view">
+        <field name="name">event.registration.inherit.kanban</field>
+        <field name="model">event.registration</field>
+        <field name="priority">37</field>
+        <field name="inherit_id" ref="event.event_registration_view_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_status']" position="replace">
+                <field name="payment_method"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="coparmex_event_registration_list" model="ir.ui.view">
+        <field name="name">event.registration.inherit.list</field>
+        <field name="model">event.registration</field>
+        <field name="priority">37</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_open']" position="after">
+                <field name="payment_method"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="event_reg_seq" model="ir.sequence">
+        <field name="name">Event Registration Sequence</field>
+        <field name="code">event.registration.sequence</field>
+        <field name="active">TRUE</field>
+        <field name="prefix"></field>
+        <field name="padding">11</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_invoice_empresa" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@class='page']/h2" position="replace">
+            <h2></h2>
+        </xpath>
+
+        <xpath expr="//div[@name='invoice_date']" position="replace">
+            <p></p>
+        </xpath>
+
+        <xpath expr="//div[@name='due_date']" position="replace">
+            <p></p>
+        </xpath>
+
+        <xpath expr="//t/t/t" position="replace">
+            <div>
+                <div class="col-6 mt8 mb8 float-right" style="border:0px solid black;">
+                    <t t-set="address">
+                        <address t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+                        <div t-if="o.partner_id.vat" >
+                            <t t-if="o.company_id.country_id.vat_label" t-esc="o.company_id.country_id.vat_label" id="inv_tax_id_label"/>
+                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                        </div>
+                    </t>
+                        <div t-if="o.invoice_date" name="invoice_date" class="col-6 float-left" style="background-color:#69B2B6; color:#fff; text-align:center;">
+                            <strong>Fecha de Factura:</strong>
+                            <p class="m-0" t-field="o.invoice_date"/>
+                        </div>
+                        <div t-if="o.invoice_date_due and o.type == 'out_invoice' and o.state == 'posted'" name="due_date" class="col-6 float-right" style="background-color:#69B2B6; color:#fff; text-align:center">
+                            <strong>Fecha de Vencimiento:</strong>
+                            <p class="m-0" t-field="o.invoice_date_due"/>
+                        </div>
+                </div>
+                <div class="col-6 float-left mt8">
+                    <h2>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Factura</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Borrador</span>
+                        <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Factura Cancelada</span>
+                        <span t-if="o.type == 'out_refund'">Nota de Crédito</span>
+                        <span t-if="o.type == 'in_refund'">Nota de Crédito Proveedor</span>
+                        <span t-if="o.type == 'in_invoice'">Factura Proveedor</span>
+                        <span t-if="o.name != '/'" t-field="o.name"/>
+                    </h2>
+                </div>
+            </div>
+        </xpath>
+        
+        <xpath expr="//div[@name='origin']" position="before">
+            <t t-if="o.l10n_mx_edi_cfdi_uuid">
+                <t t-set="xml" t-value="o.l10n_mx_edi_get_xml_etree()"/>
+                <t t-set="tfd" t-value="o.l10n_mx_edi_get_tfd_etree(xml)"/>
+                <t t-set="tfd_original_string" t-value="o._get_l10n_mx_edi_cadena()"/>
+                <t t-set="external" t-value="o.l10n_mx_edi_get_et_etree(xml)"/>
+                <t t-set="tipo_comp" t-value="xml.get('TipoDeComprobante')"/>
+            </t>
+
+            <div t-if="o.fiscal_position_id">
+                <strong>Regimen Fiscal</strong>
+                <p t-field="o.fiscal_position_id"/>
+            </div>
+            <div t-if="o.currency_id">
+                <strong>Tipo de moneda</strong>
+                <p t-field="o.currency_id"/>
+            </div>
+            <div class="col-auto mw-100 mb-2" t-if="o.l10n_mx_edi_cfdi_uuid" name="type_comp">
+                <strong>Tipo de comprobante:</strong>
+                <p t-if="tipo_comp == 'I'">Ingreso</p>
+                <p t-if="tipo_comp == 'E'">Egreso</p>
+                <p t-if="tipo_comp == 'T'">Traslado</p>
+                <p t-if="tipo_comp == 'P'">Recepción de Pagos</p>
+                <p t-if="tipo_comp == 'N'">Nomina</p>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@class='clearfix']" position="after">
+            <p t-if="o.l10n_mx_edi_cfdi_uuid">
+                <strong>Folio Fiscal</strong>
+                <span t-field="o.l10n_mx_edi_cfdi_uuid"/>
+            </p>
+        </xpath>
+    </template>
+</odoo>

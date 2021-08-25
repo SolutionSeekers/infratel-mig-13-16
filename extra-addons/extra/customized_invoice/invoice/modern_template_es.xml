@@ -9,6 +9,13 @@
             <t t-if="not o or not 'company_id' in o">
                 <t t-set="company" t-value="res_company"></t>
             </t>
+            <t t-if="o.l10n_mx_edi_cfdi_uuid">
+                <t t-set="xml" t-value="o.l10n_mx_edi_get_xml_etree()"/>
+                <t t-set="tfd" t-value="o.l10n_mx_edi_get_tfd_etree(xml)"/>
+                <t t-set="tfd_original_string" t-value="o._get_l10n_mx_edi_cadena()"/>
+                <t t-set="external" t-value="o.l10n_mx_edi_get_et_etree(xml)"/>
+                <t t-set="tipo_comp" t-value="xml.get('TipoDeComprobante')"/>
+            </t>
             <div t-attf-style="padding-bottom:0px; padding-left:0px; padding-right:0px; color:{{style.text_color}} !important;font-size:{{int(style.header_font)}}px !important;font-family:{{style.font_family}} !important;" class="header col-12">
                 <t t-if="style.header">
                     <div class="col-7 float-left" style="padding-left:0px;">
@@ -38,7 +45,7 @@
             <div class="article page" data-oe-model="account.move" t-attf-data-oe-id="{{o.id}}" t-attf-style="color:{{style.text_color}} !important;font-size:{{int(style.body_font)}}px !important;font-family:{{style.font_family}} !important;">
 
                 <div class="col-12 float-left" style="padding-left:0px; padding-right:0px;"><!--start of wrapper -->
-                    <div class="col-7 float-left mt8">
+                    <div class="col-6 float-left mt8">
                         <div t-attf-style="display:inline;width:auto;background-color:{{style.theme_color}};padding:4px; color:{{style.theme_txt_color}};font-size:{{int(style.body_font)+2}}px;">
                             <span t-if="o.partner_shipping_id == o.partner_id"><span class="fa fa-user "/> Facturación&#160; &amp;&#160; <span class="fa fa-truck "/> Dirección de Envío</span>
                             <span t-if="o.partner_shipping_id != o.partner_id"><span class="fa fa-user "/> Dirección de Facturación</span>
@@ -54,9 +61,10 @@
                         <address t-field="o.partner_id" style="margin-bottom:0px;"
                             t-options='{"widget": "contact", "fields": ["address", "phone",  "email", "website"], "no_marker": false}'/>
                         <span t-if="o.partner_id.vat">RFC: <span t-field="o.partner_id.vat"/></span>
+                        
                     </div>
-                    <div class="col-5 mt8 mb8 float-right" t-attf-style="background-color:{{style.theme_color}}; color:{{style.theme_txt_color}};">
-                        <h3 id="invoice_title">
+                    <div class="col-6 mt8 mb8 float-right" t-attf-style="background-color:{{style.theme_color}}; color:{{style.theme_txt_color}}; padding-top:10px;">
+                        <h3 id="invoice_title" style="text-align:center;">
                                     <span t-if="o.state == 'draft'">Borrador</span>
                                     <span t-if="o.state == 'cancel'">Cancelada</span>
                                     <span t-if="o.type == 'out_invoice'">Factura</span>
@@ -65,31 +73,33 @@
                                     <span t-if="o.type == 'in_invoice'">Factura de Proveedor</span>
                             <span t-field="o.name" t-if="o.state not in ['draft', 'cancel']"/>
                         </h3>
-                        <t t-set="div_style" t-value="'color:{};font-size:{}px; padding-left:4px; padding-right:4px; width:auto;max-width:100%;
-                            float:left; margin-right:8px;'.format(style.theme_txt_color,int(style.body_font)+2)"></t>
-                        <div t-if="o.invoice_date" t-attf-style="{{div_style}}">
-                            <strong style="white-space:nowrap;">Fecha de Factura:</strong>
-                            <p t-field="o.invoice_date"/>
-                        </div>
-                        <div t-if="o.invoice_date_due" t-attf-style="{{div_style}}">
-                            <strong style="white-space:nowrap;">Fecha de vencimiento:</strong>
-                            <p t-field="o.invoice_date_due"/>
-                        </div>
-                        <div t-if="o.invoice_origin" t-attf-style="{{div_style}}">
-                            <strong style="white-space:nowrap;">Documento Origen:</strong>
-                            <p t-field="o.invoice_origin"/>
-                        </div>
-                        <div t-if="o.fiscal_position_id" t-attf-style="{{div_style}}">
-                            <strong style="white-space:nowrap;">Posición Fiscal:</strong>
-                            <p t-field="o.fiscal_position_id"/>
-                        </div>
-                        <div t-if="o.ref" t-attf-style="{{div_style}}">
-                            <strong style="white-space:nowrap;">Referencia:</strong>
-                            <p t-field="o.ref"/>
-                        </div>
-
+                        <t t-set="div_style" t-value="'color:{};font-size:{}px; padding-left:4px; padding-right:4px; width:100%; max-width:100%; text-align:center; height:60px; margin-right:8px;'.format(style.theme_txt_color,int(style.body_font)+2)"/>
+                        <table style="border-collapse:collapse;width:100%;">
+                            <tr style="width:100%; height:60px;">
+                                <td style="width:33%;">
+                                    <div t-if="o.invoice_date" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Fecha de Factura:</strong>
+                                        <p t-field="o.invoice_date"/>
+                                    </div>
+                                </td>
+                                <td style="width:33%;">
+                                    <div t-if="o.invoice_date_due" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Fecha de vencimiento:</strong>
+                                        <p t-field="o.invoice_date_due"/>
+                                    </div>
+                                </td>
+                                <t t-if="o.invoice_origin">
+                                    <td style="width:33%;">
+                                        <div t-attf-style="{{div_style}}">
+                                            <strong style="white-space:nowrap;">Documento Origen:</strong>
+                                            <p t-field="o.invoice_origin"/>
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
+                        </table>
                     </div>
-                    <div class="col-7 float-left mt8" t-if="o.partner_shipping_id and o.partner_shipping_id != o.partner_id">
+                    <div class="col-6 float-left mt8" t-if="o.partner_shipping_id and o.partner_shipping_id != o.partner_id">
                         <div class="mt8" t-attf-style="display:inline;width:auto;background-color:{{style.theme_color}};padding:4px; color:{{style.theme_txt_color}};
                             font-size:{{int(style.body_font)+2}}px;">
                         <span><span class="fa fa-truck "/> Dirección de Envío</span>
@@ -99,10 +109,128 @@
                     <span t-if="o.partner_id.vat">RFC: <span t-field="o.partner_id.vat"/></span>
 
                 </div>
+
+                <!-- ************************************************ -->
+
+                <div class="col-12 float-left" style="padding-left:0px; padding-right:0px;"><!--start of wrapper -->
+                    <div class="col-12 mt8 mb8 float-right" t-attf-style="background-color:#eee; color:#555; padding:10px;">
+                        <t t-set="div_style" t-value="'color:{};font-size:{}px; padding-left:4px; padding-right:4px; width:100%; max-width:100%; text-align:center; height:60px; margin-right:8px;'.format(style.text_color,int(style.body_font)+2)"></t>
+                        <table style="border-collapse:collapse;width:100%;">
+                            <tr style="width:100%;">
+                                <td>
+                                    <div t-if="o.l10n_mx_edi_cfdi_uuid" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Folio Fiscal</strong>
+                                        <p t-field="o.l10n_mx_edi_cfdi_uuid"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-if="o.fiscal_position_id" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Regimen Fiscal</strong>
+                                        <p t-field="o.fiscal_position_id"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-if="o.ref" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Referencia</strong>
+                                        <p t-field="o.ref"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-if="o.l10n_mx_edi_cfdi_uuid" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Tipo de comprobante</strong>
+                                        <p t-if="tipo_comp == 'I'">Ingreso</p>
+                                        <p t-if="tipo_comp == 'E'">Egreso</p>
+                                        <p t-if="tipo_comp == 'T'">Traslado</p>
+                                        <p t-if="tipo_comp == 'P'">Recepción de Pagos</p>
+                                        <p t-if="tipo_comp == 'N'">Nomina</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-if="o.l10n_mx_edi_usage" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Uso de CFDI</strong>
+                                        <p t-field="o.l10n_mx_edi_usage"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-if="o.l10n_mx_edi_cfdi_uuid" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Método de pago</strong>
+                                        <p t-esc="xml.get('MetodoPago')"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-if="o.l10n_mx_edi_payment_method_id" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Forma de pago</strong>
+                                        <p t-field="o.l10n_mx_edi_payment_method_id"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-if="o.currency_id" t-attf-style="{{div_style}}">
+                                        <strong style="white-space:nowrap;">Tipo de moneda</strong>
+                                        <p t-field="o.currency_id"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div> <!--end of wrapper2-->
             <!-- DATA-->
             <t t-call="customized_invoice.invoice_lines_es"/>
                 <!--/DATA-->
+            <t t-if="o.l10n_mx_edi_cfdi_uuid">
+                <!--New global variables-->
+                <t t-set="xml" t-value="o.l10n_mx_edi_get_xml_etree()"/>
+                <t t-set="tfd" t-value="o.l10n_mx_edi_get_tfd_etree(xml)"/>
+                <t t-set="tfd_original_string" t-value="o._get_l10n_mx_edi_cadena()"/>
+                <t t-set="external" t-value="o.l10n_mx_edi_get_et_etree(xml)"/>
+                <div style="width:100%;" class="row" id="complement">
+                    <div class="barcode col-3">
+                        <t t-set="sello" t-value="xml.get('Sello', 'No identificado')[-8:]"/>
+                        <img alt="Barcode" t-att-src="'/report/barcode/?type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus(                             'https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?' + keep_query(                                 re=o.l10n_mx_edi_cfdi_supplier_rfc, rr=o.l10n_mx_edi_cfdi_customer_rfc,                                 tt='%.*f' % (o.currency_id.decimal_places, o.l10n_mx_edi_cfdi_amount), id=o.l10n_mx_edi_cfdi_uuid)                                 + '&amp;fe=%s' % quote_plus(                                     sello, 'utf-8', 'strict', '=/').replace('%2B', '+'))"/>
+                    </div>
+                    <div class="complement-details col-9">
+                        <div class="digital-stamp">
+                            <span>Digital stamp of the emitter</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-esc="xml.get('sello', xml.get('Sello', 'No identificado'))"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Digital stamp SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-esc="tfd.get('selloSAT', tfd.get('SelloSAT', 'No identificado'))"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Original chain complement of digital certification SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-esc="tfd_original_string"/>
+                        </div>
+                        <div t-if="xml.Emisor.xpath('cfdi:ExpedidoEn', namespaces=xml.nsmap)" class="digital-stamp">
+                            <span>Issued from</span>
+                        </div>
+                        <div t-if="xml.Emisor.xpath('cfdi:ExpedidoEn', namespaces=xml.nsmap)" class="digital-stamp-content">
+                            <span t-esc="' | '.join([ '%s: %s' % (key, value) for key, value in xml.Emisor.ExpedidoEn.items()])"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Extra Info</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span>Emitter certificate:</span> <span t-esc="xml.get('noCertificado', xml.get('NoCertificado'))"/>
+                            <span> | SAT Certificate:</span> <span t-esc="tfd.get('NoCertificadoSAT')"/>
+                            <span> | Expedition place:</span> <span t-esc="xml.get('LugarExpedicion')"/>
+                            <span> | Fiscal Regime:</span><span t-esc="xml.Emisor.get('RegimenFiscal', '')"/>
+                            <span> | Emission Date:</span> <span t-esc="xml.get('fecha', xml.get('Fecha', '')).replace('T', ' ')"/>
+                            <span> | Certification Date:</span> <span t-esc="tfd.get('FechaTimbrado', '').replace('T', ' ')"/>
+                            <span> | Fiscal Folio:</span> <span t-esc="tfd.get('UUID')"/>
+                        </div>
+                        <div class="digital-stamp-content text-center">
+                            <strong>This document is a printed representation of a CFDI</strong>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </div><!--End of PAGE-->
         <!--FOOTER -->
         <div class="footer" t-attf-style="font-size:{{style.footer_font}}px !important;font-family:{{style.font_family}} !important;">
