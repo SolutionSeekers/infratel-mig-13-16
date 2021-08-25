@@ -48,6 +48,7 @@
                     <page string="Style Settings">
                         <group string="Settings" style="white-space:nowrap;">
                             <group>
+                                <field name="company_id"/>
                                 <field name="header"/>
                                 <field name="footer"/>
                                 <field name="show_footer_logo" attrs="{'invisible': [('footer', '=', False)]}"/>

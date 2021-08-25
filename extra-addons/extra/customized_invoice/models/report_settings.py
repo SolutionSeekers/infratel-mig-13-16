@@ -180,3 +180,5 @@ class TemplateSettings(models.Model):
         help=
         "Check this box to enable header in your reports. \nYou may want to disable header if\
                   you are using a watermark PDF with a header content already")
+    
+    company_id = fields.Many2one('res.company', 'Compañía')

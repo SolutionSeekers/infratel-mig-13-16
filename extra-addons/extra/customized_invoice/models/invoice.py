@@ -39,7 +39,7 @@ class InvoiceTemplates(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_style(self):
-        self.style = self.partner_id.style or self.env.user.company_id.df_style or self.env.ref(
+        self.style = self.company_id.df_style or self.env.ref(
             'customized_invoice.df_style_for_all_reports').id
 
     @api.model
