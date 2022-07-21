@@ -1,7 +1,7 @@
 [submodule "extra-addons/enterprise"]
 	path = extra-addons/enterprise
 	url = git@git.indboo.com:Indboo-dev/enterprise.git
-	branch = 14.0
+	branch = 13.0-sensotek-fix-2
 [submodule "vendor-bills"]
 	path = vendor-bills
 	url = git@git.indboo.com:Indboo-dev/vendor-bills.git
