@@ -12,9 +12,9 @@
                 <field name="project_title" class="oe_inline"/>
               </h2>
             </xpath>
-            <xpath expr="//field[@name='validity_date']" position="after">
-                <field name="style" groups="base.group_system"/>
-            </xpath>
+            <!-- <xpath expr="//field[@name='validity_date']" position="after">
+                <field name="style"/>
+            </xpath> -->
             <xpath expr="//field[@name='note']" position="before">
                 <group>
                   <field name="amount_words"/>
