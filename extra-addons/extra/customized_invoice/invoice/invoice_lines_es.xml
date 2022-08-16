@@ -137,7 +137,7 @@
                 </p>
             </div>
 
-            <div class="col-12 float-left" style="padding-left:0px; padding-right:0px; page-break-inside: avoid;">
+            <div class="col-12 float-left" style="padding-left:0px; padding-right:0px;">
                 <p t-if="o.type in ('out_invoice', 'in_refund') and o.invoice_payment_ref">
                         Favor de usar el siguiente código para su pago : <b><span t-field="o.invoice_payment_ref"/></b>
                     </p>
