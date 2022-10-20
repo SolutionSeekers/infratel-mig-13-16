@@ -29,6 +29,7 @@
     # always loaded
     'data': [
         'reports/account_invoice_report.xml',
+        'views/purchase_order.xml',
 	],
     # only loaded in demonstration mode
     'demo': [
