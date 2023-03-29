@@ -1,0 +1,10 @@
+export BASE_IMAGE="vauxoo/odoo-130-image"
+export PSQL_VERSION="9.6"
+export VERSION="13.0"
+export ODOO_REPO="vauxoo/odoo"
+export ODOO_BRANCH="13.0"
+export TRAVIS_PYTHON_VERSION="3.6"
+export COUNTRY="MX"
+export PHANTOMJS_VERSION="2.1.1"
+export INCLUDE="l10n_mx,l10n_mx_edi_vendor_bills,l10n_mx_edi_customer_bills"
+export COVERAGE_MIN=80
